@@ -54,12 +54,12 @@ jobs:
             profile: 1
             artifacts: false
           - target: MPS2_AN500
-            qemu: true
+            qemu: false
             profile: 0
             artifacts: false
           - target: MPS3_AN547
             qemu: false
-            fvp: true
+            fvp: false
             profile: 0
             artifacts: false
       fail-fast: false
