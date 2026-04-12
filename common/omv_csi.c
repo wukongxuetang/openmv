@@ -69,6 +69,14 @@
 #define OMV_CSI_STATS_TAU_MS    (250)
 #endif
 
+#ifdef OPENMV4
+ // OpenMV Cam H7
+ #define FB_BYTES_PER_PX (1)
+#else
+ // all others
+ #define FB_BYTES_PER_PX (2)
+#endif
+
 #ifndef __weak
 #define __weak    __attribute__((weak))
 #endif
@@ -1340,10 +1348,10 @@ __weak int omv_csi_set_framebuffers(omv_csi_t *csi, size_t count) {
     // TODO pass this to resize.
     #if OMV_CSI_HW_CROP_ENABLE
     // If hardware cropping is supported, use window size.
-    size_t frame_size = csi->fb->u * csi->fb->v * 2;
+    size_t frame_size = csi->fb->u * csi->fb->v * FB_BYTES_PER_PX;
     #else
     // Otherwise, use the real frame size.
-    size_t frame_size = csi->resolution[csi->framesize][0] * csi->resolution[csi->framesize][1] * 2;
+    size_t frame_size = csi->resolution[csi->framesize][0] * csi->resolution[csi->framesize][1] * FB_BYTES_PER_PX;
     #endif
 
     if (count == -1) {
