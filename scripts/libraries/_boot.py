@@ -40,9 +40,11 @@ while True:
     time.sleep_ms(600)
 """
 
-readme_txt = """Thank you for supporting the baoziGun project!
-Thank you for visting www.wukongxuetang.com/aimit!
-enjoy tracking and shooting!
+readme_txt = """Thank you for supporting the baoziGun project
+
+Thank you for visting www.wukongxuetang.com/aimit
+
+enjoy tracking and shooting
 """
 
 bdev = None
