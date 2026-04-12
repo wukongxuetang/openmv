@@ -78,11 +78,11 @@ def get_button_state():
     if pin7.value() == 0: key_state |= 0x80
     return key_state
 usb = USB_VCP()
-uart = UART(3, 921600)
+uart = UART(3, 115200)
 uart.init(115200, bits=8, parity=None, stop=1, flow=0)
 sensor.reset()
 sensor.set_pixformat(sensor.GRAYSCALE)
-sensor.set_framesize(sensor.QVGA)
+sensor.set_framesize(sensor.VGA)
 sensor.skip_frames(time=200)
 sensor.set_auto_whitebal(False, rgb_gain_db = (0.0, 0.0, 0.0))
 sensor.set_brightness(-3)
