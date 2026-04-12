@@ -1,12 +1,9 @@
 import sensor, time
 from machine import LED, Pin
 from pyb import USB_VCP, UART
-import display
 image_requested = 0
 keyValue = 0
 debug = False
-noLcd = True
-useColor = False
 redLed = LED("LED_RED")
 greenLed = LED("LED_GREEN")
 blueLed = LED("LED_BLUE")
@@ -66,27 +63,23 @@ yflip = safe_int(current_config.get('yflip'), 1)
 gunId = int(current_config.get('id',9))
 pin0 = Pin("P9", Pin.IN, Pin.PULL_UP)
 pin1 = Pin("P1", Pin.IN, Pin.PULL_UP)
-if noLcd:
-    pin2 = Pin("P6", Pin.IN, Pin.PULL_UP)
-    pin3 = Pin("P3", Pin.IN, Pin.PULL_UP)
-    pin4 = Pin("P8", Pin.IN, Pin.PULL_UP)
-    pin5 = Pin("P7", Pin.IN, Pin.PULL_UP)
-    pin6 = Pin("P0", Pin.IN, Pin.PULL_UP)
-    pin7 = Pin("P2", Pin.IN, Pin.PULL_UP)
+pin2 = Pin("P6", Pin.IN, Pin.PULL_UP)
+pin3 = Pin("P3", Pin.IN, Pin.PULL_UP)
+pin4 = Pin("P8", Pin.IN, Pin.PULL_UP)
+pin5 = Pin("P7", Pin.IN, Pin.PULL_UP)
+pin6 = Pin("P0", Pin.IN, Pin.PULL_UP)
+pin7 = Pin("P2", Pin.IN, Pin.PULL_UP)
 def get_button_state():
     key_state = 0
     if pin0.value() == 0: key_state |= 0x01
     if pin1.value() == 0: key_state |= 0x02
-    if noLcd:
-        if pin2.value() == 0: key_state |= 0x04
-        if pin3.value() == 0: key_state |= 0x08
-        if pin4.value() == 0: key_state |= 0x10
-        if pin5.value() == 0: key_state |= 0x20
-        if pin6.value() == 0: key_state |= 0x40
-        if pin7.value() == 0: key_state |= 0x80
+    if pin2.value() == 0: key_state |= 0x04
+    if pin3.value() == 0: key_state |= 0x08
+    if pin4.value() == 0: key_state |= 0x10
+    if pin5.value() == 0: key_state |= 0x20
+    if pin6.value() == 0: key_state |= 0x40
+    if pin7.value() == 0: key_state |= 0x80
     return key_state
-if not noLcd:
-    lcd = display.SPIDisplay()
 usb = USB_VCP()
 uart = UART(3, 115200)
 uart.init(115200, bits=8, parity=None, stop=1, flow=0)
@@ -107,13 +100,8 @@ def update_camera_settings():
     sensor.set_vflip(yflip)
     sensor.set_auto_exposure(False, exposure_us=exposure)
 update_camera_settings()
-F_MM = 3.0
 camWidth = sensor.width()
 camHeight = sensor.height()
-FX = (F_MM / 3.984) * camWidth
-FY = (F_MM / 2.952) * camHeight
-CX = camWidth * 0.5
-CY = camHeight * 0.5
 fontScale = camWidth / 320
 clock = time.clock()
 def find_light_spots(img):
@@ -132,36 +120,6 @@ def find_light_spots(img):
         lastBlobs.sort(key=lambda b: b.area(), reverse=True)
         detected = [(b.cx(), b.cy()) for b in lastBlobs[:min(2, len(lastBlobs))]]
     return detected
-def find_center_rgb(img):
-    r_sum = g_sum = b_sum = 0
-    gray_sum = 0
-    sample_count = 0
-    region_x = int(CX - 10)
-    region_y = int(CY - 10)
-    for i in range(region_x, region_x + 20, 2):
-        for j in range(region_y, region_y + 20, 2):
-            pixel = img.get_pixel(i, j)
-            if sensorMode == sensor.RGB565:
-                r = (pixel >> 11) & 0x1F
-                g = (pixel >> 5) & 0x3F
-                b = pixel & 0x1F
-                r_sum += r
-                g_sum += g
-                b_sum += b
-            else:
-                gray_sum += pixel
-            sample_count += 1
-    if sensorMode == sensor.RGB565:
-        avg_r = r_sum // sample_count
-        avg_g = g_sum // sample_count
-        avg_b = b_sum // sample_count
-        r = (avg_r * 255) // 31
-        g = (avg_g * 255) // 63
-        b = (avg_b * 255) // 31
-        return r, g, b
-    else:
-        avg_gray = gray_sum // sample_count
-        return -1,-1,avg_gray
 def show_debug_info(img, spots):
     img.draw_string(5, 5, f"blob Num {len(spots)}", color=255, scale=fontScale)
     if len(spots) == 0:
@@ -243,17 +201,11 @@ try:
             clock.tick()
         keyValue = get_button_state()
         img = sensor.snapshot()
-        if not noLcd:
-            img_lcd = img.compress( x_scale=0.25, y_scale=0.25,quality=25)
-            lcd.write(img_lcd)
-        if useColor:
-            cr, cg, cb = find_center_rgb(img)
-            settings = "C:%d,%d,%d\n" % (cr,cg,cb)
-            uart.write(settings.encode())
         spots = find_light_spots(img)
         if debug:
             show_debug_info(img, spots)
         if len(spots) == 2:
+            redLed.off()
             greenLed.on()
             blueLed.off()
             data_str = "%d,%d,%d,%d,%d\n" % (spots[0][0], spots[0][1], spots[1][0], spots[1][1],keyValue)
@@ -261,6 +213,7 @@ try:
             if not debug:
                 print(f"{spots[0][0]},{spots[0][1]},{spots[1][0]},{spots[1][1]},{keyValue}")
         elif len(spots) == 1:
+            redLed.off()
             greenLed.off()
             blueLed.on()
             data_str = "%d,%d,%d,%d,%d\n" % (spots[0][0], spots[0][1], -1, -1, keyValue)
@@ -268,6 +221,7 @@ try:
             if not debug:
                 print(f"{spots[0][0]},{spots[0][1]},-1,-1,{keyValue}")
         else:
+            redLed.on()
             greenLed.off()
             blueLed.off()
             data_str = "%d,%d,%d,%d,%d\n" % (-1, -1, -1, -1, keyValue)
