@@ -84,7 +84,6 @@ sensorMode = sensor.GRAYSCALE
 sensor.reset()
 sensor.set_pixformat(sensorMode)
 sensor.set_framesize(sensor.VGA)
-sensor.set_framebuffers(2)
 sensor.skip_frames(time=200)
 sensor.set_auto_whitebal(False, rgb_gain_db = (0.0, 0.0, 0.0))
 sensor.set_brightness(-3)
