@@ -7,9 +7,6 @@ debug = False
 redLed = LED("LED_RED")
 greenLed = LED("LED_GREEN")
 blueLed = LED("LED_BLUE")
-redLed.on()
-greenLed.off()
-blueLed.off()
 CONFIG_FILE = "/flash/config.txt"
 current_config = {'threshold':'180', 'exposure':'30','gain':'32','invert':'255',
 'min':'5','max':'20000','xflip':'1','yflip':'1','id':'9'}
@@ -211,7 +208,7 @@ try:
             data_str = "%d,%d,%d,%d,%d\n" % (spots[0][0], spots[0][1], spots[1][0], spots[1][1],keyValue)
             uart.write(data_str.encode())
             if not debug:
-                print(f"{spots[0][0]},{spots[0][1]},{spots[1][0]},{spots[1][1]},{keyValue}")
+                print(f"{gunId},{spots[0][0]},{spots[0][1]},{spots[1][0]},{spots[1][1]},{keyValue}")
         elif len(spots) == 1:
             redLed.off()
             greenLed.off()
@@ -219,7 +216,7 @@ try:
             data_str = "%d,%d,%d,%d,%d\n" % (spots[0][0], spots[0][1], -1, -1, keyValue)
             uart.write(data_str.encode())
             if not debug:
-                print(f"{spots[0][0]},{spots[0][1]},-1,-1,{keyValue}")
+                print(f"{gunId},{spots[0][0]},{spots[0][1]},-1,-1,{keyValue}")
         else:
             redLed.on()
             greenLed.off()
@@ -227,7 +224,7 @@ try:
             data_str = "%d,%d,%d,%d,%d\n" % (-1, -1, -1, -1, keyValue)
             uart.write(data_str.encode())
             if not debug:
-                print(f"-1,-1,-1,-1,{keyValue}")
+                print(f"{gunId},-1,-1,-1,-1,{keyValue}")
         if debug:
             fps = clock.fps()
             img.draw_string(img.width()-int(65*fontScale), 5, f"{fps:.1f}fps", color=150,scale=fontScale)
