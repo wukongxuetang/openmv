@@ -84,6 +84,7 @@ sensorMode = sensor.GRAYSCALE
 sensor.reset()
 sensor.set_pixformat(sensorMode)
 sensor.set_framesize(sensor.QVGA)
+sensor.set_framebuffers(2)
 sensor.skip_frames(time=200)
 sensor.set_auto_whitebal(False, rgb_gain_db = (0.0, 0.0, 0.0))
 sensor.set_brightness(-3)
@@ -125,8 +126,7 @@ def show_debug_info(img, spots):
     for i, (u, v) in enumerate(spots):
         img.draw_circle(int(u), int(v), 6, color=colors[i])
         img.draw_string(int(u)+5, int(v)-20, f"P{i}", color=255)
-        img.draw_string(5, 20+15*i, f"P{i}: ({spots[0][0]}, {spots[0][1]})", color=200, scale=fontScale)
-    img.draw_cross(int(CX), int(CY), color=150, size=8)
+        img.draw_string(5, 20+15*i, f"P{i}: ({spots[i][0]}, {spots[i][1]})", color=200, scale=fontScale)
     if len(spots) == 2:
         img.draw_line(int(spots[0][0]), int(spots[0][1]),int(spots[1][0]), int(spots[1][1]), color=180)
         center_u = int((spots[0][0] + spots[1][0]) / 2)
