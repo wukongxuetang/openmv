@@ -40,13 +40,6 @@ jobs:
           - OPENMV3
           - OPENMV4
           - OPENMV4P
-          - OPENMVPT
-          - OPENMV_RT1060
-          - OPENMV_AE3
-          - OPENMV_N6
-          - ARDUINO_PORTENTA_H7
-          - ARDUINO_GIGA
-          - ARDUINO_NICLA_VISION
         qemu: [false]
         fvp: [false]
         profile: [0]
