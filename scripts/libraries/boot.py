@@ -243,6 +243,5 @@ try:
                     process_command(cmd, 1)
             except:
                 pass
-        pyb.wdt_feed()
 except KeyboardInterrupt:
     print("\nsystem is stopped")
