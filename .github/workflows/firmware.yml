@@ -36,7 +36,6 @@ jobs:
     strategy:
       matrix:
         target:
-          - OPENMV3
           - OPENMV4
           - OPENMV4P
         qemu: [false]
