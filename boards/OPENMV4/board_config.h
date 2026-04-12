@@ -130,14 +130,14 @@
 #define OMV_STACK_MEMORY                      ITCM  // stack memory
 #define OMV_STACK_SIZE                        (64K)
 #define OMV_SB_MEMORY                         SRAM0 // Streaming buffer memory.
-#define OMV_SB_SIZE                           (32K) // Streaming buffer size.
+#define OMV_SB_SIZE                           (16K) // Streaming buffer size.
 #define OMV_DMA_MEMORY                        SRAM2 // Misc DMA buffers memory.
 #define OMV_GC_BLOCK0_MEMORY                  SRAM4 // Main GC block.
 #define OMV_GC_BLOCK0_SIZE                    (64K)
 #define OMV_GC_BLOCK1_MEMORY                  SRAM1 // Extra GC block 0.
 #define OMV_GC_BLOCK1_SIZE                    (267K)
 #define OMV_UMA_BLOCK0_MEMORY                 SRAM0 // Default UMA pool.
-#define OMV_UMA_BLOCK0_SIZE                   (480K)
+#define OMV_UMA_BLOCK0_SIZE                   (496K)
 #define OMV_UMA_BLOCK0_FLAGS                  (0)
 #define OMV_MSC_BUF_SIZE                      (2K)  // USB MSC bot data
 #define OMV_LINE_BUF_SIZE                     (3 * 1024) // Image line buffer round(640 * 2BPP * 2 buffers).
