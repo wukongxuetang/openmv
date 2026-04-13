@@ -175,7 +175,7 @@ def send_image(img):
     global image_requested
     if image_requested==0:
         return
-    img_compressed = img.compress( x_scale=0.5, y_scale=0.5,quality=25)
+    img_compressed = img.compress( x_scale=0.25, y_scale=0.25,quality=25)
     img_len = len(img_compressed)
     if image_requested==2:
         uart.write(bytearray([0xAA, 0x55]))
